@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Homepage</title>
+    <link rel="stylesheet" href="Frontend\style.css">
+    <!---we had linked our css file----->
+</head>
+<body>
+    <div class="full-page">
+        <h1 style="text-align: center; margin-top: 100px; color: white;" >Solar Power Generation Predictor</h1> 
+        <div id='login-form'class='login-page' "document.getElementById('login-form').style.display='block'" style="width:auto;">
+            <div class="form-box">
+                
+                <form id='login-form' class='input-group-login' action="/predict" method="post">
+                    <style>
+                        ::placeholder {
+                                color: white;
+                                opacity: 0.8; 
+                                    }
+                    </style>
+                    
+                    <input type='text'class='input-field'placeholder='Location' name ='city' required style="color: white;">
+		            <input type='text'class='input-field'placeholder='Area in Sq. meters' name = 'area' required style="color: white;">
+		            <input type='text'class='input-field'placeholder='Efficiency' name = 'efficiency' required style="color: white;">
+                    <button type='submit'class='submit-btn'>Calculate</button>
+		        </form>
+            </div>
+        </div>
+        <div class="auth-box" style="text-align: center; padding: 20px 50px 20px 50px;">   
+        <h2 style="color: black;">Designed and Developed by Prajwal Hukerikar</h2>
+        <p><a href="https://github.com/prajwal3120/Solar-Power-Generation-Predictor">Checkout this project on Github</a></p>  <p><a href="https://www.linkedin.com/in/prajwalhukerikar">Connect on LinkedIn</a></p>  <p><a href="mailto:prajwalhukerikar@gmail.com">Connect on Email</a></p>
+        </div>
+    </div>
+</body>
+</html>

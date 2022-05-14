@@ -3,50 +3,43 @@ from flask import Flask,request, jsonify, url_for, redirect, render_template
 import pickle
 import numpy as np
 from sklearn.metrics import r2_score
-from api_fetch import api_fetch
-from Predictions import prediction
+from Backend.api_fetch import api_fetch
+from Backend.Predictions import prediction
 import json
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder = 'Frontend', static_folder = 'Frontend')
 
 model=pickle.load(open('database\irradiance_XGB.pkl','rb'))
 
 
 @app.route('/')
-def hello_world():
-    return render_template("home.html")
+def homepage():
+    return render_template('Homepage.html')
 
 
 @app.route('/predict',methods=['POST','GET'])
 def predict():
     location = request.form['city']
-    wattage = request.form['Panel_Wattage']
-    api_fetch(location)
+    efficiency = int(request.form['efficiency'])
+    area = int(request.form['area'])
+    location = api_fetch(location)
 
-    irradiance = prediction(wattage)[0]
-    daytime = prediction(wattage)[1]
-    power_generation = prediction(wattage)[2]
-    avg_power_generation = prediction(wattage)[3]
-    temp = prediction(wattage)[4]
-    avg_temp = prediction(wattage)[5]
-    date = prediction(wattage)[6]
-    sunrise = prediction(wattage)[7]
-    sunset = prediction(wattage)[8]
-    r2_score = 0.9807567558305414
+    irradiance = prediction(efficiency,area)[0]
+    daytime = prediction(efficiency,area)[1]
+    power_generation = prediction(efficiency,area)[2]
+    avg_power_generation = prediction(efficiency,area)[3]
+    temp = prediction(efficiency,area)[4]
+    avg_temp = prediction(efficiency,area)[5]
+    date = prediction(efficiency,area)[6]
+    sunrise = prediction(efficiency,area)[7]
+    sunset = prediction(efficiency,area)[8]
+    avg_daytime = prediction(efficiency,area)[9]
+    avg_irradiance = prediction(efficiency,area)[10]
+    power_gen_units = prediction(efficiency,area)[11]
+    r2_score = 0.98
 
-    irradiance = irradiance.tolist()
-    date = date.tolist()
-    # class NumpyEncoder(json.JSONEncoder):
-    #     def default(self, obj):
-    #         if isinstance(obj, np.ndarray):
-    #             return obj.tolist()
-    #         return json.JSONEncoder.default(self, obj)
-    # json_data = json.dumps({'irradiance': irradiance, 'daytime': daytime, 'power_generation': power_generation, 'avg_power_generation':avg_power_generation,'temp':temp,'avg_temp':avg_temp,'date':date,'sunrise':sunrise,'sunset':sunset,'location':location,'wattage':wattage,'r2_score':r2_score}, 
-    #                    cls=NumpyEncoder)
 
-    data = [irradiance,daytime,power_generation,avg_power_generation, temp,avg_temp,date,sunrise,sunset,location,wattage,r2_score]
-
-    return render_template('dashboard.html' , irradiance = irradiance, date=date)
+    return render_template('Dashboard.html',date=date,irradiance=irradiance,daytime=daytime,power_generation=power_generation,avg_power_generation=avg_power_generation,temp=temp,avg_temp=avg_temp,sunrise=sunrise,sunset=sunset,location=location,efficiency=efficiency,area=area,r2_score=r2_score,avg_daytime=avg_daytime,avg_irradiance=avg_irradiance,power_gen_units=power_gen_units)
 
 if __name__ == '__main__':
     app.run(debug=True)

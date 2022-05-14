@@ -9,7 +9,7 @@ from sklearn.metrics import r2_score
 import matplotlib.pyplot as plt
 import joblib
 
-def prediction(wattage):
+def prediction(efficiency,area):
 
     data2 = pd.read_csv(r"database\API_CSV.csv")
 
@@ -61,11 +61,11 @@ def prediction(wattage):
  
     a = model.predict(dtest)
     a = np.reshape(a, (15,))
-
-    panel_wattage = float(wattage)
-    panel_wattage= np.repeat(wattage,15)
+    
+    unit = float(efficiency * area)
+    unit = np.repeat(unit,15)
     irradiance = np.array(a) 
-    x = np.array(panel_wattage)
+    x = np.array(unit)
     x = x.astype(np.float)
     avg_daily_irradiance = ((irradiance * daytime)/1000)
     avg_daily_irr = np.array(avg_daily_irradiance)  
@@ -78,8 +78,21 @@ def prediction(wattage):
     temp = np.array(temp)
 
     avg_temp = np.mean(temp)
+    
+    avg_daytime = np.mean(daytime)
 
-    return irradiance,daytime,power_generation,avg_power_generation, temp,avg_temp,date,sunrise,sunset
+
+    avg_irradiance= np.mean(irradiance)
+
+    power_gen_units = (avg_power_generation * avg_daytime)
+
+    avg_irradiance= np.format_float_positional(avg_irradiance, 2)
+    power_gen_units = np.format_float_positional(power_gen_units, 2)
+    avg_daytime = np.format_float_positional(avg_daytime, 2)
+    avg_power_generation = np.format_float_positional(avg_power_generation, 2)
+    avg_temp = np.format_float_positional(avg_temp, 2)
+
+    return irradiance,daytime,power_generation,avg_power_generation, temp,avg_temp,date,sunrise,sunset,avg_daytime,avg_irradiance,power_gen_units
 
 
 
